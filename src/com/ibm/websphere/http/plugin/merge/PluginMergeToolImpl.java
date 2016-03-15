@@ -77,6 +77,7 @@ public class PluginMergeToolImpl implements PluginMergeTool {
     private final boolean failOver = true; /* 654526 */
     private static boolean precedence = false;
     private Element mergeConfigNode;
+    private static Element mergeConfigNode2; //PI07230
     private PluginInfo[] plugins;
     private final ArrayList<PluginInfo> sharedPlugins = new ArrayList<PluginInfo>();
     private final HashSet<String> emptyServerClusters = new HashSet<String>();
@@ -508,16 +509,20 @@ public class PluginMergeToolImpl implements PluginMergeTool {
                 encoding = dom.getXmlEncoding();
 
                 // convenient handle for processing the document, everything lives under the config node of the xml document
-                mergeConfigNode = (Element) dom.getDocumentElement().cloneNode(true);
+                //PI07230 mergeConfigNode = (Element) dom.getDocumentElement().cloneNode(true);
+                mergeConfigNode2 = (Element) dom.getDocumentElement().cloneNode(true); //PI07230
                 // all elements present in the first processed doc will remain in the merged doc expect the 4 explicitly removed below
 
-                NodeList nl = mergeConfigNode.getElementsByTagName("IntelligentManagement");
+                //PI07230 NodeList nl = mergeConfigNode.getElementsByTagName("IntelligentManagement");
+                NodeList nl = mergeConfigNode2.getElementsByTagName("IntelligentManagement"); //PI07230
 
                 if (nl.getLength() == 0) {
                     // the first plugin-cfg provided will be used as the basis for the mergeDoc
                     //if (i == 0) {  Changed to plgFile since it's now possible to send parameters as part of the command line arguments
                     if (plgFile == 0) {
-
+                    	
+                        mergeConfigNode = (Element) dom.getDocumentElement().cloneNode(true); //PI07230
+                        
                         nodeListRemoveAll(mergeConfigNode, mergeConfigNode.getElementsByTagName("ServerCluster"));
                         nodeListRemoveAll(mergeConfigNode, mergeConfigNode.getElementsByTagName("VirtualHostGroup"));
                         nodeListRemoveAll(mergeConfigNode, mergeConfigNode.getElementsByTagName("UriGroup"));
